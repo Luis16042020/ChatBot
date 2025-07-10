@@ -6,6 +6,7 @@ from agente import AgenteOpenAIFunctions
 load_dotenv()
 
 pergunta = "Quais os dados de Ana?"
+pergunta = "Crie um perfil acadêmico da Ana!"
 
 agente = AgenteOpenAIFunctions()
 executor = AgentExecutor(agent=agente.agente, tools=agente.tools, verbose=True)
