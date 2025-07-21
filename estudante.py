@@ -17,7 +17,12 @@ class DadosDeEstudantes(BaseTool):
             llm = ChatOpenAI(model="gpt-4o", 
                             api_key=os.getenv("OPENAI_API_KEY"))
             parser = JsonOutputParser(pydantic_object=ExtratorDeEstudante)
-            template = PromptTemplate(template="""Você deve analisar a {input} para extrair o nome de usuário informado.
+            template = PromptTemplate(template="""Você deve analisar a entrada a seguir e extrair o nome informado em minúsculo.
+Entrada: 
+---------------------------                          
+{input}
+---------------------------
+                                      
             Formato de saida:
             {formato_saida}""",
             input_variables=["input"],
@@ -25,8 +30,8 @@ class DadosDeEstudantes(BaseTool):
             cadeia = template | llm | parser
             resposta = cadeia.invoke({"input" : input})
             # print(resposta)
-            estudante = resposta['estudante']
-            estudante = estudante.lower()
+            estudante = input
+            estudante = estudante.lower().strip()
             dados = busca_dados_de_estudante(estudante)
             # print(dados)
             return json.dumps(dados)
@@ -55,7 +60,9 @@ class PerfilAcademicoDeEstudante(BaseModel):
 
 class PerfilAcademico(BaseTool):
      name: str = Field("PerfilAcademico")
-     description: str = Field("Cria um perfil acadêmico de um estudante. Esta Ferramenta requer como entrada todos os dados do estudante.")
+     description: str = Field("""Cria um perfil acadêmico de um estudante. Esta Ferramenta requer como entrada todos os dados do estudante.
+                              Eu sou incapaz de buscar os dados do estudante.
+                              Você tem que buscar os dados do estudante antes de me invocar.""")
 
      def _run(self, input: str) -> str:
         llm = ChatOpenAI(model="gpt-4o", 

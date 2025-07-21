@@ -1,6 +1,6 @@
 from estudante import DadosDeEstudantes, PerfilAcademico
 from langchain.agents import Tool
-from langchain.agents import create_openai_tools_agent
+from langchain.agents import create_openai_tools_agent, create_react_agent
 from langchain_openai import ChatOpenAI
 import os
 from langchain import hub
@@ -26,7 +26,11 @@ class AgenteOpenAIFunctions:
             )
         ]
 
-        prompt = hub.pull("hwchase17/openai-functions-agent")
-        print(prompt)
+        #Openai functions
+        # prompt = hub.pull("hwchase17/openai-functions-agent")
+        # self.agente = create_openai_tools_agent(llm, self.tools, prompt)
 
-        self.agente = create_openai_tools_agent(llm, self.tools, prompt)
+        #React
+        prompt = hub.pull("hwchase17/react")
+        self.agente = create_react_agent(llm, self.tools, prompt)
+        print(prompt)
